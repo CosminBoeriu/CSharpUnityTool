@@ -1,5 +1,4 @@
 ﻿namespace UnityTool;
-
 static class UnityTool
 {
     public static HashSet<string> UsedScripts = new HashSet<string>();
@@ -10,7 +9,8 @@ static class UnityTool
         retVal = aux[1].Split("\n", 2);
         return retVal;
     }
-
+    
+    // Function returns the order of SceneRoots to determine scene hierarchy 
     static List<string> GetSceneRoots(Object obj)
     {
         var roots = (List<object>)(obj.Fields["SceneRoots"])["m_Roots"];
@@ -22,12 +22,13 @@ static class UnityTool
 
         return result;
     }
-
+    
     static void MarkUsedScript(string scriptId)
     {
         UsedScripts.Add(scriptId);
     }
     
+    // Function determines scene hierarchy of a unity file whose path is given.
     static void ComputeUnityFileHierarchy(string pathToUnityFile, string outputDirectory)
     {
         var unityFileName = Path.GetFileName(pathToUnityFile);
@@ -60,13 +61,16 @@ static class UnityTool
             t.Children.ForEach(item => resultStack.Push(( (Transform)objects["Transform"][item], level + 1)));
         }
         sw.Close();
-
+        
+        // All objects that are iterated over are of type Behaviour, the cast is always successful
         foreach (Behaviour behaviour in objects["MonoBehaviour"].Values)
         {
             MarkUsedScript(behaviour.Script);
         }
         
     }
+    
+    // This function returns a dictionary with all elements of a unity file, parsing it with a yaml parser
     static Dictionary<string, Dictionary<string, Object>> ParseUnityFile(string pathToUnityFile)
     {
         Dictionary<string, Dictionary<string, Object>> result = new Dictionary<string, Dictionary<string, Object>>();
@@ -103,7 +107,8 @@ static class UnityTool
         }
         return result;
     }
-
+    
+    // Function determines is the given string is used or not
     static string ComputeUnusedScripts(Script script)
     {
         if (!script.VerifySerialization() && !UsedScripts.Contains(script.Id)) 
@@ -112,12 +117,12 @@ static class UnityTool
         }
         return "";
     }
-
+    
     static void Main(string[] args)
     {
         var csFiles = Directory.EnumerateFiles(args[0], "*.cs", SearchOption.AllDirectories);
         var unityFiles = Directory.EnumerateFiles(args[0], "*.unity", SearchOption.AllDirectories);
-        var threadList = new List<Thread>(); 
+        var threadList = new List<Thread>();
         foreach (var unityFile in unityFiles)
         {
             threadList.Add(new Thread(() => ComputeUnityFileHierarchy(unityFile, args[1])));
@@ -128,15 +133,26 @@ static class UnityTool
         {
             thread.Join();
         }
+
         
         string scriptOutputFile = Path.Combine(args[1], "UnusedScripts.csv");
-        StreamWriter sw = File.CreateText(scriptOutputFile);
-        sw.Write("Relative Path,GUId\n");
-        foreach (var scriptPath in csFiles)
-        {
-            Script s = new Script(scriptPath, args[0]);
-            sw.Write(ComputeUnusedScripts(s));
+        /* A try block is necessary here, because the csv file may be open in another application
+           and an error may be raised when trying to write in it */
+        try 
+        { 
+            StreamWriter sw = File.CreateText(scriptOutputFile); 
+            sw.Write("Relative Path,GUID\n");
+            foreach (var scriptPath in csFiles)
+            {
+                Script s = new Script(scriptPath, args[0]);
+                sw.Write(ComputeUnusedScripts(s));
+            }
+
+            sw.Close();
         }
-        sw.Close();
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 }
