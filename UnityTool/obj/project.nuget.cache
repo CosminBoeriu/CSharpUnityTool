@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "mN1YWUkPoC4fhPsUhkKdZgJ8GJwOa0Gk++kgtJLWF/n7S2DlyAQrKIQ8rMjZUvmY+m8/75Lz8VHofVfJe8oTUQ==",
+  "success": true,
+  "projectFilePath": "/home/cosmin/Informatica/UnityTool/UnityTool/UnityTool/UnityTool.csproj",
+  "expectedPackageFiles": [
+    "/home/cosmin/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.4/microsoft.codeanalysis.analyzers.3.3.4.nupkg.sha512",
+    "/home/cosmin/.nuget/packages/microsoft.codeanalysis.common/4.8.0/microsoft.codeanalysis.common.4.8.0.nupkg.sha512",
+    "/home/cosmin/.nuget/packages/microsoft.codeanalysis.csharp/4.8.0/microsoft.codeanalysis.csharp.4.8.0.nupkg.sha512",
+    "/home/cosmin/.nuget/packages/system.collections.immutable/7.0.0/system.collections.immutable.7.0.0.nupkg.sha512",
+    "/home/cosmin/.nuget/packages/system.reflection.metadata/7.0.0/system.reflection.metadata.7.0.0.nupkg.sha512",
+    "/home/cosmin/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "/home/cosmin/.nuget/packages/yamldotnet/13.7.1/yamldotnet.13.7.1.nupkg.sha512"
+  ],
+  "logs": []
+}
